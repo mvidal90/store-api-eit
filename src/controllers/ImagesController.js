@@ -4,6 +4,8 @@ export const getImage = async (req, res) => {
     const { idImage } = req.params;
     try {
         const image = await Images.findById(idImage)
+        // Búqueda por nombre:
+        // const image = await Images.findOne({ filename: paramName})
         
         const imgBuffer = Buffer.from(image.img.data)
 

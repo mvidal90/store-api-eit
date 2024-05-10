@@ -1,5 +1,5 @@
 import express from "express";
-import { getImage } from "../controllers/ImagesController.js";
+import { getImage } from "../controllers/imagesController.js";
 
 
 const route = express.Router()
