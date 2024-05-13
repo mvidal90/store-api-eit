@@ -93,3 +93,68 @@ export const getProducts = async (req, res) => {
             })
     }
 }
+
+export const editProduct = async (req, res) => {
+    const {id} = req.params
+    const {body, file} = req
+    try {
+        const product = await Products.findById(id)
+
+        if (!product) {
+            return res.status(404)
+                .json({
+                    ok: false,
+                    msg: "Producto no encontrado o id inválido"
+                })
+        }
+
+        let imageUrl = product.imgUrl
+
+        if (file) {
+            const imageBuffer = fs.readFileSync(`./temp/imgs/${file.filename}`)
+        
+            const image = await Images.create({
+                fileName: file.filename,
+                img: {
+                    data: imageBuffer,
+                    contentType: "image/png"
+                }
+            })
+            
+            if (!image) {
+                return res.status(400)
+                    .json({
+                        ok: false,
+                        msg: "No se pudo guardar correctamente la imagen."
+                    })
+            }
+
+            fs.rm(`./temp/imgs/${file.filename}`, error => {
+                    if (error) {
+                        console.log("Lo sentimos, no hemos podido eliminar el archivo")
+                    }
+                    console.log("El archivo se ha eliminado correctamente")
+                })
+                
+            imageUrl =`${process.env.BASE_URL}/images/${image._id}`
+        }
+
+        const productUpdated = await Products.findByIdAndUpdate(id, {
+            ...body,
+            imgUrl: imageUrl
+        }, { new: true });
+
+        res.json({
+            ok: true,
+            product: productUpdated,
+            msg: "El producto se actualizò correctamente."
+        })
+    } catch (error) {
+        console.log("Ha habido un error al editar el producto.")
+        res.status(500)
+            .json({
+                ok: false,
+                msg: "Ha habido un error con el servidor"
+            })
+    }
+}
