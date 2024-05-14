@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 
 import productsRoutes from "./src/routes/products.routes.js";
 import imagesRoutes from "./src/routes/images.routes.js";
+import messagesRoutes from "./src/routes/messages.routes.js";
 
 import { dbConection } from "./src/database/dbConection.js";
 
@@ -20,6 +21,7 @@ const api = async () => {
     server.use('/public', express.static(`./temp/imgs`))
     server.use("/images", imagesRoutes)
     server.use("/api/products", productsRoutes)
+    server.use("/api/messages", messagesRoutes)
     
     server.listen(process.env.PORT, () => console.log(`Servidor corriendo en el puerto ${process.env.PORT}`))
 }
