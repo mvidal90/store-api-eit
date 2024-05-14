@@ -1,6 +1,6 @@
 import express from "express";
 
-import { createProduct, editProduct, getProducts } from "../controllers/productsController.js";
+import { createProduct, deleteProduct, editProduct, getProducts } from "../controllers/productsController.js";
 
 import upload from "../libs/storage.js";
 
@@ -11,6 +11,6 @@ route
     .post("/", upload.single("image"), createProduct)
     .get("/", getProducts)
     .put("/edit/:id", upload.single("image"), editProduct)
-    // .delete("/delete/:id")
+    .delete("/delete/:id", deleteProduct)
 
 export default route;
