@@ -2,11 +2,19 @@ import { Cart } from "../models/Cart.js"
 
 export const createCart = async (req, res) => {
     try {
-        const newCart = await Cart.create(req.body);
+        const newCart = await Cart.create(req.body)
+        
+        const cart = await Cart.findById(newCart._id)
+                                .populate({
+                                    path: "items",
+                                    populate: {
+                                        path: "product"
+                                    }
+                                })
 
         res.json({
             ok: true,
-            cart: newCart
+            cart
         })
 
     } catch (error) {
@@ -54,3 +62,28 @@ export const editCart = async (req, res) => {
             })
     }
 }
+
+export const getById = async (req, res) => {
+    const {id} = req.params;
+    try {
+        const cart = await Cart.findById(id)
+                        .populate({
+                            path: "items",
+                            populate: {
+                                path: "product"
+                            }
+                        })
+
+        res.json({
+            ok: true,
+            cart
+        })
+    } catch (error) {
+        console.log("Ha habido un error al editar el producto.")
+        res.status(500)
+            .json({
+                ok: false,
+                msg: "Ha habido un error con el servidor"
+            })
+    }
+} 
